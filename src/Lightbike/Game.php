@@ -2,7 +2,6 @@
 namespace Lightbike;
 
 use React\Socket\ConnectionInterface;
-use SplObjectStorage;
 
 /**
  * Game
@@ -12,10 +11,11 @@ class Game
 
     /**
      * Object containing all clients
+     * hashmap created from player connection id
      *
-     * @var SplObjectStorage
+     * @var array
      */
-    protected $players;
+    protected $players = [];
 
     /**
      * Game is started
@@ -36,7 +36,6 @@ class Game
     public function __construct($maxPlayers = 4)
     {
         $this->maxPlayers = $maxPlayers;
-        $this->players = new SplObjectStorage($maxPlayers);
     }
 
     /**
@@ -61,7 +60,7 @@ class Game
 
     /**
      * Get all players
-     * @return \SplObjectStorage
+     * @return array
      */
     public function getPlayers()
     {
@@ -70,19 +69,52 @@ class Game
 
     /**
      * Add player
-     * @param \React\Socket\ConnectionInterface $player
+     * @param \Lightbike\Player
+     * @throws Lightbike\Game\FullException
      */
-    public function addPlayer(ConnectionInterface $player)
+    public function addPlayer(Player $player)
     {
-        $this->players->attach($player);
+        if ($this->isFull()) {
+            throw new Game\FullException('Game is full');
+        }
+        // Set currently active game
+        $player->setGame($this);
+        $this->players[$player->getConnection()->resourceId] = $player;
     }
 
     /**
      * Remove player
-     * @param \React\Socket\ConnectionInterface $player
+     * @param Player $player
      */
-    public function removePlayer(ConnectionInterface $player)
+    public function removePlayer(Player $player)
     {
-        $this->players->detach($player);
+        unset($this->players[$player->getConnection()->resourceId])
+    }
+
+    /**
+     * Check if game is full to allow new players
+     * @return boolean
+     */
+    public function isFull()
+    {
+        if (count($this->players) === $this->maxPlayers) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get random color
+     * @return string
+     */
+    public function getRandomColor()
+    {
+        $color = sprintf(
+            "#%x%x%x",
+            rand(0, 255),
+            rand(0, 255),
+            rand(0, 255)
+        );
+        return $color;
     }
 }
