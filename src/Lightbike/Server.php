@@ -44,9 +44,16 @@ class Server implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         // Store the new connection to send messages to later
-        $this->game->addPlayer(new Player($conn));
-
+        $newPlayer = new Player($conn);
+        $this->game->addPlayer($newPlayer);
         echo "Added player! ({$conn->resourceId})\n";
+        if ($this->game->getPlayers() > 1) {
+            // Send message ready to start
+            $players = $this->game->getPlayers();
+            foreach ($players as $player) {
+                // Send message ready to play
+            }
+        }
     }
 
     /**

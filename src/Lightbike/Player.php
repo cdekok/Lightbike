@@ -83,4 +83,16 @@ class Player
         $this->game = $game;
         return $this;
     }
+
+    /**
+     * Cast important properties to array
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'id' => $this->getConnection()->resourceId,
+            'color' => $this->color
+        ];
+    }
 }

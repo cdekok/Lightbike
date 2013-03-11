@@ -2,8 +2,9 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title></title>
-        <script type="text/javascript">            
+        <title>Lightbike</title>
+        <script src="assets/js/Lightbike.js" type="text/javascript"></script>
+        <script type="text/javascript">
             // shim layer with setTimeout fallback
             window.requestAnimFrame = (function() {
                 return  window.requestAnimationFrame ||
@@ -15,29 +16,32 @@
                             window.setTimeout(callback, 1000 / 60);
                         };
             })();
-            
-            
+
+
             window.addEventListener('DOMContentLoaded', function() {
-                
+
                 /**
                  * Setup the lightbike game
                  * @type @exp;document@call;getElementById
                  */
                 var canvas = document.getElementById("track");
                 var lightbike = new Lightbike(canvas);
-                
+
                 /**
                  * Render frames
                  * @returns void
                  */
-                (function animloop() {
-                    requestAnimFrame(animloop);
-                    lightbike.render();
-                })();
+//                (function animloop() {
+//                    requestAnimFrame(animloop);
+//                    lightbike.render();
+//                })();
+
+
             });
         </script>
     </head>
     <body>
         <canvas id="track" width="800" height="600"></canvas>
+        <button>start game!</button>
     </body>
 </html>

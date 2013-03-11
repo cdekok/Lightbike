@@ -1,11 +1,11 @@
 /*
  * Lightbike
- * 
+ *
  * @author Chris de Kok <chris.de.kok@gmail.com>
  */
 
 /**
- * 
+ *
  * @param {element} canvas
  * @returns {Lightbike}
  */
@@ -20,12 +20,30 @@ var Lightbike = function(canvas) {
         y: 0
     };
 
+    // Connect to server
+    this.connect();
+
     if (window.DeviceOrientationEvent) {
         //window.addEventListener("devicemotion", this._devicemotion.bind(this));
         window.addEventListener('keydown', this._keydown.bind(this));
     } else {
         window.addEventListener('keydown', this._keydown.bind(this));
     }
+};
+
+/**
+ * Setup the connection to the server
+ * @returns void
+ */
+Lightbike.prototype.connnect = function(){
+    // Setup server here..
+    this.connection = new WebSocket('ws://localhost:8080');
+    this.connection.onopen = function(e) {
+        console.log("Connection established!");
+    };
+    this.connection.onmessage = function(e) {
+        console.log(e.data);
+    };
 };
 
 /**
